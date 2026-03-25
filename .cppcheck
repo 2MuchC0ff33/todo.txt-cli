@@ -1,0 +1,2 @@
+# Enable all tests, use strict C standards, POSIX, and warning/error
+# Run: cppcheck --enable=all --language=c --std=c23 --force src/

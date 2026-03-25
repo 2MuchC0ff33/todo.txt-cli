@@ -1,0 +1,16 @@
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/todo_lib.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/todo.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/format.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/cppcheck.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/smoke_tests.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/run-smoke.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/package-local.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/profile-build.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/run-profile.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/bolt-opt.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/edit_cache.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/rebuild_cache.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/list_install_components.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/install.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/install/local.dir
+C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/install/strip.dir

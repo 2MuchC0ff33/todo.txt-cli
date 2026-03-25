@@ -1,0 +1,4 @@
+Checks: 'cert-*,clang-analyzer-*,bugprone-*,performance-*,portability-*,modernize-*,-llvm-header-guard'
+WarningsAsErrors: '*'
+HeaderFilterRegex: ''
+FormatStyle: file

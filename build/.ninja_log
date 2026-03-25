@@ -1,0 +1,21 @@
+# ninja log v7
+2	86	7961025234697934	CMakeFiles/todo.dir/src/todo.c.obj	a36b789f5a9cad27
+537	774	7961043667257772	todo.exe	25752093584f86eb
+5	280	7961048551407761	C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/cmake.verify_globs	54ad02570d9a0298
+134	278	7961043663227683	CMakeFiles/todo.dir/src/main.c.obj	ff946c611424ebfe
+125	267	7961043663141345	CMakeFiles/todo_lib.dir/src/todo.c.obj	e19df1a07f224e04
+267	537	7961043664561189	libtodo_lib.a	14d390e9e47ab438
+119	790	7961048670144276	build.ninja	43e2ce4a57cfc833
+119	790	7961048669450393	C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/cmake_install.cmake	43e2ce4a57cfc833
+171	202	7961043982240790	help	2cc55c1977e89c48
+94	218	7961045350214102	CMakeFiles/package-local	be91bbb1d334edca
+94	218	7961045350214102	C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/package-local	be91bbb1d334edca
+187	401	7961047596834820	CMakeFiles/smoke_tests.dir/tests/simple_tests.c.obj	15876c64e59c3d2b
+402	3522	7961047598979154	smoke_tests.exe	c8cee08a66a8e46b
+5	193	7961050781170345	C:/Users/galloa/scoop/apps/msys2/2026-03-22/home/galloa/.local/src/todo.txt-cli/build/CMakeFiles/cmake.verify_globs	54ad02570d9a0298
+243	469	7961050783542266	CMakeFiles/smoke_tests.dir/tests/simple_tests.c.obj	a01276af608ec941
+229	500	7961050783407140	CMakeFiles/todo.dir/src/main.c.obj	16a66f5b814bd3e7
+200	511	7961050783116739	CMakeFiles/todo_lib.dir/src/todo.c.obj	50da015168533217
+511	8699	7961050786235655	libtodo_lib.a	14d390e9e47ab438
+8716	9100	7961050868275304	smoke_tests.exe	40c02df18fdb744b
+8699	9105	7961050868108391	todo.exe	ff42dccfe0f78589
