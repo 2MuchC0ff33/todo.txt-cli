@@ -1,0 +1,24 @@
+.POSIX:
+# Makefile.posix - build strict-C99 helpers (POSIX make only; GNU Makefile untouched).
+CC = tcc
+CFLAGS = -Wall -Werror
+BINDIR = var/build
+NORM_SRC = src/todo_norm.c
+NORM_BIN = $(BINDIR)/todo_norm.exe
+SORT_SRC = src/todo_sort.c
+SORT_BIN = $(BINDIR)/todo_sort.exe
+
+.SUFFIXES: .c .exe
+
+all: $(NORM_BIN) $(SORT_BIN)
+
+$(NORM_BIN): $(NORM_SRC)
+	mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) -o $(NORM_BIN) $(NORM_SRC)
+
+$(SORT_BIN): $(SORT_SRC)
+	mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) -o $(SORT_BIN) $(SORT_SRC)
+
+clean:
+	rm -f $(NORM_BIN) $(SORT_BIN)

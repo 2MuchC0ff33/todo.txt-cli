@@ -4,3 +4,10 @@ tests/trash\ directory.*
 done.txt
 report.txt
 todo.txt
+var/build/
+var/log/
+var/spool/
+var/tmp/
+home/todo.txt
+home/done.txt
+home/report.txt

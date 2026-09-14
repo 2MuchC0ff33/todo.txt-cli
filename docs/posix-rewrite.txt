@@ -1,0 +1,2 @@
+# POSIX-OS rewrite notes (Lua-core). Legacy todo.sh untouched at root.
+# See branch feature/2026-09-15-posix-os-rewrite. Gates: env_probe, audit, run-tests, shfmt, shellcheck.

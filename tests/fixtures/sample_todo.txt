@@ -1,0 +1,3 @@
+(A) 2026-09-15 Call mom +Family @phone
+x 2026-09-14 Done task
+plain task +Proj @ctx

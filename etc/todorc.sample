@@ -1,0 +1,6 @@
+# todorc - POSIX-OS config template (replaces todo.cfg for new stack).
+TODO_DIR="$HOME/.todo"
+TODO_FILE="$TODO_DIR/todo.txt"
+DONE_FILE="$TODO_DIR/done.txt"
+REPORT_FILE="$TODO_DIR/report.txt"
+TODOTXT_VERBOSE=1
