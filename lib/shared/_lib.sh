@@ -10,3 +10,12 @@ portable_mktemp() {
   set -- $n
   printf '%s/%s.%s.%s' "$ROOT/var/tmp" "$prefix" "$$" "$1"
 }
+die() {
+  printf '%s\n' "$*" >&2
+  exit 1
+}
+get_prefix() {
+  base="$(basename "$1")"
+  base="${base%%.*}"
+  printf '%s\n' "$base" | tr '[:lower:]' '[:upper:]'
+}

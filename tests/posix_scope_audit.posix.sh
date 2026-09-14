@@ -31,6 +31,7 @@ for f in $FILES; do
     esac
     case "$text" in
       *portable_mktemp*) : ;;
+      *getopts*) : ;; # ash builtin getopts is allowlisted; banned applet is getopt
       *aria2c* | *md5sum* | *sha256sum* | *sha1sum* | *readlink* | *realpath* | *xxd* | *shuf* | *timeout* | *usleep* | *truncate* | *whoami* | *iconv* | *getopt* | *io.popen* | *__attribute__* | *typeof* | *IGNORECASE* | *systime* | *strftime* | */dev/stderr* | */dev/tcp*)
         report "banned" "$f" "$ln" "$text"
         ;;
