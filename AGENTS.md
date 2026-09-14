@@ -59,3 +59,19 @@ Bash completion; `todo.cfg` = config template (installed, not read in place).
   message → **push origin master is mandatory** → `git branch -D <feature>` →
   `git reflog expire --expire=now --all && git gc --aggressive --prune=now &&
   git fsck --full --strict` (expect silence).
+
+## Upstream sync (fork consume-only model, full procedure: docs/upstream-sync.txt)
+- Remotes: `origin` = this fork (sole push target); `upstream` =
+  todotxt/todo.txt-cli (fetched, never pushed, never PR'd — upstream is Bash
+  by constitution). One-time: `git remote add upstream
+  https://github.com/todotxt/todo.txt-cli.git && git fetch upstream`.
+- `master` stays a pristine upstream mirror (never commit the rewrite there);
+  the POSIX-OS tree lives only on `feature/2026-09-15-posix-os-rewrite`.
+- Sync order: `checkout master` → `fetch upstream` →
+  `merge --ff-only upstream/master` → `push origin master` →
+  `checkout feature/...` → inspect via `git log --oneline master@{1}..master` →
+  `rebase master` → `push --force-with-lease` backup.
+- Porting rule: syncing `master` does NOT fix `bin/`/`lib/`/`src/` — replicate
+  each upstream behavioral fix in the Lua/awk/sh equivalent PLUS a
+  `tests/cli_*.posix.sh` transcript assertion.
+- Verify per sync: POSIX gates locally + legacy `make test` via CI.

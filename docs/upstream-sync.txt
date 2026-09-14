@@ -1,0 +1,64 @@
+# Upstream sync (fork consume-only model)
+
+This repo is a fork of todotxt/todo.txt-cli. Sync is CONSUME-ONLY: we absorb
+upstream fixes into our fork and never PR the POSIX-OS rewrite back upstream
+(upstream is Bash by constitution; the rewrite would be rejected on scope).
+
+## Remotes
+
+- `origin` = your fork (2MuchC0ff33/todo.txt-cli). Sole push target.
+- `upstream` = todotxt/todo.txt-cli. Fetched, never pushed.
+
+One-time setup (safe, changes no branch):
+
+  git remote add upstream https://github.com/todotxt/todo.txt-cli.git
+  git fetch upstream
+
+## Branch map
+
+- `master` = pristine upstream mirror. Never commit the rewrite there, so the
+  fork stays diffable against todotxt.
+- `feature/2026-09-15-posix-os-rewrite` = sole home of the POSIX-OS tree
+  (bin/ lib/ libexec/ src/ etc/todorc* Makefile.posix docs/ tests/*.posix.sh).
+  Legacy todo.sh, tests/tNNNN*, GNU Makefile stay untouched, so rebases apply
+  cleanly. Only `.gitignore` overlaps with upstream-owned files.
+
+## Sync procedure (in order; stop if any step fails)
+
+  git checkout master
+  git fetch upstream
+  git merge --ff-only upstream/master
+  git push origin master
+  git checkout feature/2026-09-15-posix-os-rewrite
+  git log --oneline master@{1}..master   # what moved; drives porting below
+  git rebase master
+  git push -u origin feature/2026-09-15-posix-os-rewrite --force-with-lease
+
+If `--ff-only` fails, master diverged: inspect before forcing anything.
+After a rebase, the backup push needs `--force-with-lease` (first push: `-u`).
+
+## Porting rule (the real ongoing work)
+
+Syncing master does NOT fix bin/ lib/ src/. Every upstream behavioral fix in
+an already-ported action (add, list, and later ports) must be replicated in
+the Lua/awk/sh equivalent PLUS a transcript assertion in tests/cli_*.posix.sh
+(example: the TODO_DIR replacement bug class becomes a todo_env.sh test).
+Fixes in not-yet-ported actions need nothing: they wait in the legacy tree.
+
+## Verification per sync
+
+- POSIX gates locally: shfmt -d empty, AUDIT PASS, run-tests green,
+  tcc -Wall -Werror builds (see docs/posix-rewrite.txt).
+- Legacy `make test` via CI (no bash/make on this box); master must stay green.
+
+## Divergence warning
+
+The squash-merge endgame permanently forks master from upstream. After that,
+`--ff-only` stops working and syncs become merges (conflicts stay confined to
+our added files). Decide deliberately at merge time, not before.
+
+## Cadence
+
+Sync when upstream master moves. Check without fetching:
+
+  git ls-remote upstream master

@@ -1,2 +1,7 @@
 # POSIX-OS rewrite notes (Lua-core). Legacy todo.sh untouched at root.
 # See branch feature/2026-09-15-posix-os-rewrite. Gates: env_probe, audit, run-tests, shfmt, shellcheck.
+# Upstream sync model: docs/upstream-sync.txt (consume-only; master mirrors todotxt).
+# Layout: bin/todo.sh (sh glue) -> lib/lua (domain) + lib/awk (stream) + lib/sh (pipes/env);
+#   src/*.c (C99 --pipe filters); Makefile.posix (.POSIX:); tests/*.posix.sh (TDD transcripts).
+# Ported: add/a/addm/addto (Lua), list/ls/listfile/lf (awk pipeline + sort).
+# Lua stdout on Windows is CRLF: bin/todo.sh pipes it through tr -d '\r' (exit kept).
