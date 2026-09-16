@@ -2,7 +2,7 @@
 assert(_VERSION == "Lua 5.5", "need Lua 5.5, got " .. tostring(_VERSION))
 local priority = {}
 function priority.upper(line)
-  return line:gsub("^%((%l)%)", "(%1).").upper and line or line
+  return line:gsub("^%((%l)%)", function(c) return "(" .. c:upper() .. ")" end, 1)
 end
 function priority.strip(line)
   return line:gsub("^%([A-Z]%)%s+", "", 1)

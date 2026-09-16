@@ -7,17 +7,33 @@ Bash completion; `todo.cfg` = config template (installed, not read in place).
 ## Scope split (read first)
 - **Repo code is deliberately Bash** (shopt/extglob/arrays) and CI (ubuntu/macos,
   bash + GNU make) is its execution target. Do NOT convert it to POSIX sh.
-- **This Windows box is BusyBox-W32 v1.38.0.git + Lua 5.5.0 + scoop tcc, with `shfmt`/
-  `shellcheck` on PATH — but no bash/make.** Anything you WRITE NEW here follows the
-  elvis conformance constitution: `~/.local/src/projects/personal/elvis/AGENTS.md`
-  (canonical utility allowlist, banned tools/options/constructs, gates).
+- **This Windows box is BusyBox-W32 v1.38.0.git (scoop mingit-busybox 2.55.0.5) + Lua
+  5.5.0 + scoop tcc 0.9.27 + sqlite3 3.53.4, with `shfmt`/`shellcheck` on PATH — but no
+  bash/make.** Anything you WRITE NEW here follows the elvis conformance constitution:
+  `~/.local/src/projects/personal/elvis/AGENTS.md` (canonical utility allowlist, banned
+  tools/options/constructs, gates).
 - Domain map for new code: POSIX `sh` = orchestration/utility glue (skills: posix-sh,
   busybox-ash); POSIX `awk` = stream/text processing (posix-awk); Lua stdlib-only
-  (`io/os/string/table`) = core general language (lua-glue); strict C99 via tcc =
-  perf-critical/system helpers only (c99-systems, tcc-build); POSIX `make` = new build
-  scripts only (posix-make) — the repo `Makefile` is GNU, leave it alone.
+  (`io/os/string/table`) = core general language (lua-glue); tcc-compatible C17 =
+  perf-critical/system helpers only (c17-systems); sqlite3 3.53.4 = primary DB
+  (sqlite3-posix; sh owns all invocations via `lib/sh/sqlite.sh`); POSIX `make` = new
+  build scripts only (posix-make) — the repo `Makefile` is GNU, leave it alone.
+- Canonical stack index: the global `posix-toolchain-stack` skill (sh=glue, awk=stream,
+  Lua=primary, C17=hot path, sqlite=persistence, make=build, *rc=config,
+  `etc/posix_allowlist.txt`=scope law). Scope law for new code: `etc/posix_allowlist.txt`.
 - Run `shfmt -ln=posix` + `shellcheck --shell=sh` on new POSIX shell (both on PATH);
   never apply POSIX gates to the repo's Bash files.
+
+## Persistence (sqlite3-backed, DB-truth)
+- `TODO_DB` (default `$TODO_DIR/todo.db`, WAL) is the authoritative store; `todo.txt`/
+  `done.txt` are byte-faithful DB exports regenerated after every mutation (blanks are
+  rows, physical line numbers preserved).
+- cksum reconciler: on every mutation action, `bin/todo.sh` re-imports a file when its
+  `cksum` differs from the last-synced value in the `meta` table — hand-edited plaintext
+  is picked up, then DB wins.
+- `lib/sh/sqlite.sh` is the SOLE sqlite3 caller (frozen contract: `-batch`, `.bail on`,
+  `.mode list`, heredoc SQL batches). Lua never shells out; it emits
+  `apply|append|<file>|<text>` records that sh applies and then re-exports.
 
 ## Verification
 - Full: `make test`. Single: `cd tests && ./tNNNN-name.sh`
@@ -27,6 +43,12 @@ Bash completion; `todo.cfg` = config template (installed, not read in place).
 - `make disttest` re-runs the suite against built `dist/` (embedded VERSION).
   Version changes must pass both paths (see below).
 - On this box `make test` cannot run (no make/bash) — rely on CI or Git Bash/WSL.
+- POSIX-OS gates (feature branch): `busybox sh tests/env_probe.posix.sh` (version pins:
+  lua 5.5.0, tcc 0.9.27, sqlite3 3.53.4, `busybox make --posix` dry-run),
+  `busybox sh tests/posix_scope_audit.posix.sh` → `AUDIT PASS`,
+  `busybox sh tests/run-tests.posix.sh`, `shfmt -ln=posix -d` (empty) on touched sh,
+  `shellcheck --shell=sh` on touched sh, `busybox make --posix -n -f Makefile.posix`.
+  Aggregate target: `busybox make --posix -f Makefile.posix check`.
 
 ## Version machinery
 - `todo.sh:9` holds literal `VERSION="@DEV_VERSION@"`; gitignored `VERSION-FILE`

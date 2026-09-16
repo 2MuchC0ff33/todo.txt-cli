@@ -5,6 +5,7 @@
 : "${TODO_FILE:=$TODO_DIR/todo.txt}"
 : "${DONE_FILE:=$TODO_DIR/done.txt}"
 : "${REPORT_FILE:=$TODO_DIR/report.txt}"
+: "${TODO_DB:=$TODO_DIR/todo.db}"
 : "${TODOTXT_VERBOSE:=1}"
 : "${TODOTXT_FORCE:=0}"
 : "${TODOTXT_DATE_ON_ADD:=0}"

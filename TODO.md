@@ -6,7 +6,8 @@ mirrors `todotxt/todo.txt-cli`). Rewrite notes: `docs/posix-rewrite.txt`.
 
 Domain tags: `sh` = orchestration/pipes/exit codes only; `lua` = task model +
 state transitions (stdlib `io/os/string/table` only); `awk` = stream
-projection; `c99` = `--pipe` hot-path filters only (`tcc -Wall -Werror`).
+projection; `c17` = `--pipe` hot-path filters only (`tcc -Wall -Werror`);
+`sqlite` = persistence (DB-truth, sole caller `lib/sh/sqlite.sh`).
 
 Rule: an action counts as ported only with code PLUS a golden transcript in
 `tests/cli_*.posix.sh` and green gates (`shfmt -d`, `AUDIT PASS`, `run-tests`).
@@ -18,9 +19,25 @@ Rule: an action counts as ported only with code PLUS a golden transcript in
 - [x] `add` / `a`, `addm`, `addto` (`lua`: `actions.lua` + `store.lua`)
 - [x] `list` / `ls`, `listfile` / `lf` (`awk`: `list|filter|format` + sort pipe)
 - [x] `help` (usage surface), global opts `-d -t -T -v -f -p -a -V -h`
-- [x] Gates: `env_probe`, `posix_scope_audit`, `run-tests` (5/5 green)
+- [x] Gates: `env_probe`, `posix_scope_audit`, `run-tests` (6/6 green)
 - [x] `src/todo_norm.c` + `src/todo_sort.c` compile under `tcc -Wall -Werror`
 - [x] `docs/upstream-sync.txt`; upstream remote registered, sync at `105fae6`
+
+## Phase 2b — sqlite DB layer (done)
+
+- [x] `lib/schema.sql` (`lines` + `meta` tables, WAL) + `lib/sh/sqlite.sh` sole
+  sqlite3 caller (frozen contract: `-batch`, `.bail on`, `.mode list`)
+- [x] DB-truth + cksum reconciler: hand-edited files re-imported on the next
+  mutation action (meta `cksum:<file>`); DB wins after import
+- [x] Byte-faithful export: blanks-as-rows, physical line numbers preserved,
+  CRLF normalized to LF (`tr -d '\r'`)
+- [x] `add`/`addm`/`addto` emit `apply|append|<file>|<text>` records; sh applies
+  via sqlite.sh and re-exports touched files; verbose output moved to sh
+- [x] `TODO_DB` (default `$TODO_DIR/todo.db`) in `todo_env.sh` + `todorc.sample`;
+  `TODO_KEY`/`DONE_KEY` basename keys; `.gitignore` `todo.db*`
+- [x] `tests/unit_store_sqlite.posix.sh` (14 checks); `env_probe` pins sqlite3
+  3.53.4 + `busybox make --posix`; audit widened (banned tools/options,
+  sqlite3 confinement); `Makefile.posix check` target
 
 ## Phase 2 — core mutations
 
@@ -148,3 +165,10 @@ when `FORCE=1`, which tests always set — POSIX `read` has no `-e`/`-N1`).
   plain output wins).
 - Upstream sync is consume-only; `master` stays a pristine mirror until the
   Phase 5 merge. Full procedure: `docs/upstream-sync.txt`.
+- Persistence is DB-truth (sqlite3 3.53.4, WAL): `todo.txt`/`done.txt` are
+  byte-faithful exports regenerated after each mutation; a cksum reconciler
+  re-imports hand-edited files on the next mutation action. Flat files stay the
+  interop face (todo.txt standard).
+- `lib/sh/sqlite.sh` is the sole sqlite3 caller (frozen contract: `-batch`,
+  `.bail on`, `.mode list`, heredoc SQL batches). Lua never shells out; it
+  emits `apply|append|<file>|<text>` records that sh applies and re-exports.

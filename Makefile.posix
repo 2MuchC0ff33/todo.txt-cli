@@ -22,3 +22,8 @@ $(SORT_BIN): $(SORT_SRC)
 
 clean:
 	rm -f $(NORM_BIN) $(SORT_BIN)
+
+check:
+	sh tests/env_probe.posix.sh
+	sh tests/posix_scope_audit.posix.sh
+	sh tests/run-tests.posix.sh

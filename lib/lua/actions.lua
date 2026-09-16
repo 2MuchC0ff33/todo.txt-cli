@@ -1,8 +1,9 @@
 -- actions.lua - add/addm/addto dispatch (Lua-core domain logic).
--- Usage: lua actions.lua ACTION [args...]
--- Env: TODO_DIR TODO_FILE DONE_FILE REPORT_FILE TODOTXT_VERBOSE TODOTXT_FORCE
+-- Lua emits apply records on stdout: apply|append|<file>|<text>
+-- Host (sh) applies them to sqlite3 via lib/sh/sqlite.sh and re-exports.
+-- Env: TODO_DIR TODO_FILE DONE_FILE REPORT_FILE TODOTXT_FORCE
 --      TODOTXT_DATE_ON_ADD TODOTXT_PRIORITY_ON_ADD
--- Host (sh) sets env, owns pipes; Lua owns task semantics. No shell-outs.
+-- Host (sh) sets env, owns pipes and the DB; Lua owns task semantics. No shell-outs.
 assert(_VERSION == "Lua 5.5", "need Lua 5.5, got " .. tostring(_VERSION))
 
 local function script_dir()
@@ -28,7 +29,6 @@ end
 
 local TODO_DIR = os.getenv("TODO_DIR") or ""
 local TODO_FILE = os.getenv("TODO_FILE") or ""
-local VERBOSE = getenv_num("TODOTXT_VERBOSE", 1)
 local FORCE = getenv_num("TODOTXT_FORCE", 0)
 local DATE_ON_ADD = os.getenv("TODOTXT_DATE_ON_ADD") or "0"
 local PRI_ON_ADD = os.getenv("TODOTXT_PRIORITY_ON_ADD") or ""
@@ -38,30 +38,8 @@ local function die(msg)
   os.exit(1)
 end
 
-local function prefix_of(path)
-  local name = path:match("([^/\\]+)$") or path
-  name = name:gsub("%..*$", "")
-  return name:upper()
-end
-
-local function fix_eol(path)
-  local fh = io.open(path, "r")
-  if not fh then return end
-  local data = fh:read("*a")
-  fh:close()
-  if data ~= "" and data:sub(-1) ~= "\n" then
-    local out = io.open(path, "a")
-    if out then out:write("\n"); out:close() end
-  end
-end
-
-local function line_count(path)
-  local fh = io.open(path, "r")
-  if not fh then return 0 end
-  local n = 0
-  for _ in fh:lines() do n = n + 1 end
-  fh:close()
-  return n
+local function basename(path)
+  return path:match("([^/\\]+)$") or path
 end
 
 local function decorate(text)
@@ -83,13 +61,7 @@ end
 
 local function add_one(path, raw)
   local text = decorate(input.clean_add(raw))
-  fix_eol(path)
-  store.append_line(path, text)
-  if VERBOSE > 0 then
-    local num = line_count(path)
-    io.write(num .. " " .. text .. "\n")
-    io.write(prefix_of(path) .. ": " .. num .. " added.\n")
-  end
+  store.apply_append(basename(path), text)
 end
 
 local function join_args(from)

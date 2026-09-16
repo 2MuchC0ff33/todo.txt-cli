@@ -4,6 +4,7 @@ tests/trash\ directory.*
 done.txt
 report.txt
 todo.txt
+todo.db*
 var/build/
 var/log/
 var/spool/

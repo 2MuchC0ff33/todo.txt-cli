@@ -1,4 +1,7 @@
--- store.lua - file transitions (read/write/append/replace line N).
+-- store.lua - file transitions (read + apply-record emission; DB-truth).
+-- Reads operate on the synced export file; mutations are emitted as
+-- `apply|append|<file>|<text>` records that sh applies to sqlite3 and
+-- re-exports. Lua never writes files and never shells out.
 assert(_VERSION == "Lua 5.5", "need Lua 5.5, got " .. tostring(_VERSION))
 local store = {}
 function store.read_lines(path)
@@ -9,16 +12,7 @@ function store.read_lines(path)
   fh:close()
   return lines
 end
-function store.write_lines(path, lines)
-  local fh, err = io.open(path, "w")
-  if not fh then io.stderr:write("store: " .. tostring(err) .. "\n"); os.exit(1) end
-  for i = 1, #lines do fh:write(lines[i], "\n") end
-  fh:close()
-end
-function store.append_line(path, line)
-  local fh, err = io.open(path, "a")
-  if not fh then io.stderr:write("store: " .. tostring(err) .. "\n"); os.exit(1) end
-  fh:write(line, "\n")
-  fh:close()
+function store.apply_append(file, text)
+  io.write("apply|append|" .. file .. "|" .. text .. "\n")
 end
 return store
